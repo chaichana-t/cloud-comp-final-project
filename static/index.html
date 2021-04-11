@@ -2,16 +2,20 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>A static page</title>
-    <script>
-        const socket = new WebSocket("ws://localhost:8080/subscribe");
-
-        socket.addEventListener("message", (event) => {
-            console.log(event.data)
-        })
-    </script>
+    <title>Dashboard</title>
+    <script src="websocket.js"></script>
 </head>
 <body>
-    <h1>Hello from a static page</h1>
+    <table id="main" border="1">
+        <thead>
+            <tr>
+                <td>Restaurant ID</td>
+                <td>Current Customer Count</td>
+            </tr>
+        </thead>
+        <tbody id="table-body">
+
+        </tbody>
+    </table>
 </body>
 </html>
