@@ -2,6 +2,7 @@ package endpoint
 
 import (
 	"cloud-final-project/cmd/restaurant"
+	"fmt"
 	"log"
 	"net/http"
 )
@@ -21,4 +22,8 @@ func checkIn(w http.ResponseWriter, r *http.Request) {
 
 func checkOut(w http.ResponseWriter, r *http.Request) {
 	restaurant.CheckOut(getRestaurantID(r))
+}
+
+func getRestaurant(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprint(w, restaurant.GetName(getRestaurantID(r)))
 }

@@ -19,6 +19,9 @@ func init() {
 
 	http.HandleFunc("/checkin", checkIn)
 	http.HandleFunc("/checkout", checkOut)
+
+	http.HandleFunc("/name", getRestaurant)
+
 	http.HandleFunc("/subscribe", subscribe)
 
 	go listen(fmt.Sprintf(":%s", os.Getenv("HTTP_PORT")))

@@ -18,13 +18,15 @@ socket.addEventListener("message", (event) => {
 function createRow(restaurantID, value) {
     const row = document.createElement("tr")
     row.id = restaurantID
-    row.appendChild(createCell(restaurantID, "restaurant-id"))
-    row.appendChild(createCell(value, "current-customer"))
+    getRestaurantName(restaurantID).then((name) => {
+        row.appendChild(createCell(name, "restaurant-id"))
+        row.appendChild(createCell(value, "current-customer"))
 
-    const tableBody = document.getElementById("table-body")
-    tableBody.appendChild(row)
+        const tableBody = document.getElementById("table-body")
+        tableBody.appendChild(row)
 
-    restaurants[restaurantID] = true
+        restaurants[restaurantID] = true
+    })
 }
 
 function createCell(value, type) {
@@ -40,4 +42,19 @@ function updateRow(restaurantID, value) {
         alert("error")
     }
     cell[0].textContent = value
+}
+
+function getRestaurantName(restaurantID) {
+    return new Promise((resolve, reject) => {
+        let xmlHttp = new XMLHttpRequest();
+
+        xmlHttp.onreadystatechange = () => {
+            if (xmlHttp.readyState === 4 && xmlHttp.status === 200) {
+                resolve(xmlHttp.responseText);
+            }
+        }
+
+        xmlHttp.open("GET", "/name?rid=" + restaurantID, true);
+        xmlHttp.send(null);
+    })
 }
