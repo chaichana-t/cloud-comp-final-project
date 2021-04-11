@@ -1,25 +1,10 @@
 package endpoint
 
 import (
-	syncService "cloud-final-project/cmd/sync-service"
-	"fmt"
-	"github.com/joho/godotenv"
+	"cloud-final-project/cmd/restaurant"
 	"log"
 	"net/http"
-	"os"
 )
-
-func init() {
-	err := godotenv.Load()
-	if err != nil {
-		panic(err)
-	}
-
-	http.HandleFunc("/checkin", checkIn)
-	http.HandleFunc("/checkout", checkOut)
-
-	go listen(fmt.Sprintf(":%s", os.Getenv("HTTP_PORT")))
-}
 
 func getRestaurantID(r *http.Request) string {
 	return r.URL.Query()["rid"][0]
@@ -31,9 +16,9 @@ func listen(port string) {
 }
 
 func checkIn(w http.ResponseWriter, r *http.Request) {
-	syncService.Increase(getRestaurantID(r))
+	restaurant.CheckIn(getRestaurantID(r))
 }
 
 func checkOut(w http.ResponseWriter, r *http.Request) {
-	syncService.Decrease(getRestaurantID(r))
+	restaurant.CheckOut(getRestaurantID(r))
 }
