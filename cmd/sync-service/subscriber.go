@@ -1,37 +1,19 @@
 package sync_service
 
 import (
-	"github.com/go-redis/redis/v7"
 	"log"
-	"strconv"
 )
 
-func Subscribe(key string) chan int {
-	pubsub := client.Subscribe(key)
-	payloads := make(chan int)
+func Subscribe(pubsubChannel string, payloadChannel chan string) {
+	pubsub := client.Subscribe(pubsubChannel)
 
-	go subscribeLoop(pubsub, payloads)
-
-	log.Printf("Subscribe \"%s\" successfully.\n", key)
-
-	return payloads
-}
-
-func subscribeLoop(pubsub *redis.PubSub, payloads chan int) {
+	log.Printf("Subscribe \"%s\" channel successfully.\n", pubsubChannel)
 	for {
 		message, err := pubsub.ReceiveMessage()
 		if err != nil {
-			return
+			log.Print(err)
+			continue
 		}
-
-		value, _ := strconv.Atoi(message.Payload)
-		if value != cache[message.Channel] {
-			cache[message.Channel] = value
-		}
-		payloads <- value
+		payloadChannel <- message.Payload
 	}
-}
-
-func Get(key string) int {
-	return cache[key]
 }

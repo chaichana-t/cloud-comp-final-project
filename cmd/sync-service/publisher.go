@@ -1,15 +1,11 @@
 package sync_service
 
-func publishValueChange(key string, value int64) {
-	client.Publish(key, value)
-}
-
-func Increase(key string) {
+func Increase(key string, pubsubChannel string, payloadConstructor func (string, int64) string) {
 	result := client.Incr(key)
-	publishValueChange(key, result.Val())
+	client.Publish(pubsubChannel, payloadConstructor(key, result.Val()))
 }
 
-func Decrease(key string) {
+func Decrease(key string, pubsubChannel string, payloadConstructor func (string, int64) string) {
 	result := client.Decr(key)
-	publishValueChange(key, result.Val())
+	client.Publish(pubsubChannel, payloadConstructor(key, result.Val()))
 }
