@@ -16,6 +16,7 @@ const redisPayloadChannel = "value-change"
 func init() {
 	messages = make(map[string]string)
 	payloadChannel = make(chan string)
+	clients = make(map[string]*websocket.Conn)
 
 	restaurants := getRestaurants()
 
@@ -27,7 +28,7 @@ func init() {
 }
 
 func getRestaurants() []string {
-	return []string{"1234"}
+	return []string{"cad25750-9b14-11eb-a8b3-0242ac130003", "d936f9f4-9b14-11eb-a8b3-0242ac130003", "de42536c-9b14-11eb-a8b3-0242ac130003"}
 }
 
 func constructPayload(restaurantID string, value string) string {

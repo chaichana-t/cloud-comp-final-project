@@ -13,6 +13,10 @@ func init() {
 		panic(err)
 	}
 
+	fileServer := http.FileServer(http.Dir("./static"))
+
+	http.Handle("/", fileServer)
+
 	http.HandleFunc("/checkin", checkIn)
 	http.HandleFunc("/checkout", checkOut)
 	http.HandleFunc("/subscribe", subscribe)

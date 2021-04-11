@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>A static page</title>
+    <script>
+        const socket = new WebSocket("ws://localhost:8080/subscribe");
+
+        socket.addEventListener("message", (event) => {
+            console.log(event.data)
+        })
+    </script>
+</head>
+<body>
+    <h1>Hello from a static page</h1>
+</body>
+</html>
