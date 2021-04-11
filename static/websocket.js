@@ -18,9 +18,10 @@ socket.addEventListener("message", (event) => {
 function createRow(restaurantID, value) {
     const row = document.createElement("tr")
     row.id = restaurantID
-    getRestaurantName(restaurantID).then((name) => {
-        row.appendChild(createCell(name, "restaurant-id"))
-        row.appendChild(createCell(value, "current-customer"))
+
+    get("info", {rid: restaurantID}).then(info => {
+        row.appendChild(createCell(info.Name, "restaurant-id"))
+        row.appendChild(createCell(value + "/" + info.MaxCustomer, "current-customer"))
 
         const tableBody = document.getElementById("table-body")
         tableBody.appendChild(row)
@@ -44,17 +45,27 @@ function updateRow(restaurantID, value) {
     cell[0].textContent = value
 }
 
-function getRestaurantName(restaurantID) {
+function get(uri, query) {
     return new Promise((resolve, reject) => {
+        uri += "?"
+        for (const key of Object.keys(query)) {
+            uri += key + "=" + query[key] + "&";
+        }
+
         let xmlHttp = new XMLHttpRequest();
 
         xmlHttp.onreadystatechange = () => {
-            if (xmlHttp.readyState === 4 && xmlHttp.status === 200) {
-                resolve(xmlHttp.responseText);
+            if (xmlHttp.readyState === 4) {
+                if (xmlHttp.status === 200) {
+                    console.log(xmlHttp.responseText)
+                    resolve(JSON.parse(xmlHttp.responseText))
+                } else {
+                    reject(xmlHttp.status)
+                }
             }
         }
 
-        xmlHttp.open("GET", "/name?rid=" + restaurantID, true);
+        xmlHttp.open("GET", encodeURI(uri), true);
         xmlHttp.send(null);
     })
 }

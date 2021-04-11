@@ -2,6 +2,7 @@ package endpoint
 
 import (
 	"cloud-final-project/cmd/restaurant"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -24,6 +25,11 @@ func checkOut(w http.ResponseWriter, r *http.Request) {
 	restaurant.CheckOut(getRestaurantID(r))
 }
 
-func getRestaurant(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, restaurant.GetName(getRestaurantID(r)))
+func getRestaurantInfo(w http.ResponseWriter, r *http.Request) {
+	info, err := json.Marshal(restaurant.GetInfo(getRestaurantID(r)))
+	if err != nil {
+		w.WriteHeader(500)
+	}
+
+	fmt.Fprint(w, string(info))
 }

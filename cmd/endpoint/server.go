@@ -20,7 +20,7 @@ func init() {
 	http.HandleFunc("/checkin", checkIn)
 	http.HandleFunc("/checkout", checkOut)
 
-	http.HandleFunc("/name", getRestaurant)
+	http.HandleFunc("/info", getRestaurantInfo)
 
 	http.HandleFunc("/subscribe", subscribe)
 
