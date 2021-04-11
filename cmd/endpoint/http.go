@@ -26,7 +26,7 @@ func listen(port string) {
 }
 
 func checkIn(w http.ResponseWriter, r *http.Request) {
-
+	
 }
 
 func checkOut(w http.ResponseWriter, r *http.Request) {
