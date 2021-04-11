@@ -6,8 +6,6 @@ import (
 	"strconv"
 )
 
-var cache map[string]int
-
 func Subscribe(key string) chan int {
 	pubsub := client.Subscribe(key)
 	payloads := make(chan int)

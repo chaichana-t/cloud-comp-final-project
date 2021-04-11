@@ -8,12 +8,7 @@ import (
 )
 
 func main() {
-	c := syncService.Subscribe("A")
-
-	syncService.Increase("A")
-	syncService.Increase("A")
-	syncService.Increase("B")
-	syncService.Increase("B")
+	c := syncService.Subscribe("1234")
 
 	for {
 		log.Println(<-c)

@@ -8,6 +8,8 @@ import (
 
 var client *redis.Client
 
+var cache map[string]int
+
 func init() {
 	err := godotenv.Load()
 	if err != nil {
@@ -17,4 +19,6 @@ func init() {
 	client = redis.NewClient(&redis.Options{
 		Addr: os.Getenv("REDIS_ADDR"),
 	})
+
+	cache = make(map[string]int)
 }
