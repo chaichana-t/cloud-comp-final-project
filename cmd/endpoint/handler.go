@@ -8,25 +8,30 @@ import (
 	"net/http"
 )
 
-func getRestaurantID(r *http.Request) string {
+func parseRestaurantID(r *http.Request) string {
 	return r.URL.Query()["rid"][0]
 }
 
-func listen(port string) {
-	log.Printf("Application is listening on %s\n", port)
-	log.Fatal(http.ListenAndServe(port, nil))
+func subscribe(w http.ResponseWriter, r *http.Request) {
+	conn, err := upgrader.Upgrade(w, r, nil)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	restaurant.Subscribe(conn)
 }
 
 func checkIn(w http.ResponseWriter, r *http.Request) {
-	restaurant.CheckIn(getRestaurantID(r))
+	restaurant.CheckIn(parseRestaurantID(r))
 }
 
 func checkOut(w http.ResponseWriter, r *http.Request) {
-	restaurant.CheckOut(getRestaurantID(r))
+	restaurant.CheckOut(parseRestaurantID(r))
 }
 
 func getRestaurantInfo(w http.ResponseWriter, r *http.Request) {
-	info, err := json.Marshal(restaurant.GetInfo(getRestaurantID(r)))
+	info, err := json.Marshal(restaurant.GetInfo(parseRestaurantID(r)))
 	if err != nil {
 		w.WriteHeader(500)
 	}
