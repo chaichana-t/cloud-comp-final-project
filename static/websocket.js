@@ -12,7 +12,7 @@ const CLASS_NAME = {
 socket.addEventListener("message", (event) => {
     const message = parseMessage(event.data)
 
-    if (restaurants[message] === undefined) {
+    if (restaurants[message.restaurantID] === undefined) {
         createNewRestaurant(message.restaurantID, message.value)
         restaurants[message.restaurantID] = true
     } else {
