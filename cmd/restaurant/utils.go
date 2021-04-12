@@ -24,7 +24,4 @@ func broadcastMessage(message string) {
 	}
 }
 
-func getRestaurants() []string {
-	return []string{"cad25750-9b14-11eb-a8b3-0242ac130003", "d936f9f4-9b14-11eb-a8b3-0242ac130003", "de42536c-9b14-11eb-a8b3-0242ac130003"}
-}
 

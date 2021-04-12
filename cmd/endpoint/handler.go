@@ -8,10 +8,6 @@ import (
 	"net/http"
 )
 
-func parseRestaurantID(r *http.Request) string {
-	return r.URL.Query()["rid"][0]
-}
-
 func subscribe(w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {

@@ -14,3 +14,13 @@ var mockRestaurants = map[string]*Restaurant{
 func GetInfo(restaurantID string) *Restaurant {
 	return mockRestaurants[restaurantID]
 }
+
+func getRestaurants() []string {
+	var restaurantIDs []string
+
+	for restaurantID, _ := range mockRestaurants {
+		restaurantIDs = append(restaurantIDs, restaurantID)
+	}
+
+	return restaurantIDs
+}
