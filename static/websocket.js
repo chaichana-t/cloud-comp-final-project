@@ -4,45 +4,55 @@ const socket = new WebSocket(websocketURI);
 
 let restaurants = {}
 
-socket.addEventListener("message", (event) => {
-    const restaurantID = event.data.slice(0, 36)
-    const value = event.data.slice(36)
+const CLASS_NAME = {
+    RESTAURANT_ID: "restaurant-id",
+    CUSTOMER_COUNT: "customer-count",
+}
 
-    if (restaurants[restaurantID] === undefined) {
-        createRow(restaurantID, value)
+socket.addEventListener("message", (event) => {
+    const message = parseMessage(event.data)
+
+    if (restaurants[message] === undefined) {
+        createNewRestaurant(message.restaurantID, message.value)
+        restaurants[message.restaurantID] = true
     } else {
-        updateRow(restaurantID, value)
+        updateRestaurant(message.restaurantID, message.value)
     }
 })
 
-function createRow(restaurantID, value) {
-    const row = document.createElement("tr")
-    row.id = restaurantID
+function parseMessage(message) {
+    return {
+        restaurantID: message.slice(0, 36),
+        value: message.slice(36)
+    }
+}
 
+function createElement(tag, options, children) {
+    const e = document.createElement(tag)
+    if (options.id !== undefined) e.id = options.id;
+    if (options.className !== undefined) e.className = options.className;
+
+    for (const child of children) e.appendChild(child);
+
+    return e;
+}
+
+function createNewRestaurant(restaurantID, value) {
     get("info", {rid: restaurantID}).then(info => {
-        row.appendChild(createCell(info.Name, "restaurant-id"))
-        row.appendChild(createCell(value + "/" + info.MaxCustomer, "current-customer"))
+        const restaurantName = createElement("td", {
+            className: CLASS_NAME.RESTAURANT_ID
+        }, [document.createTextNode(info.Name)]);
+        const customerCount = createElement("td", {
+            className: CLASS_NAME.CUSTOMER_COUNT
+        }, [document.createTextNode(value + "/" + info.MaxCustomer)]);
 
         const tableBody = document.getElementById("table-body")
-        tableBody.appendChild(row)
-
-        restaurants[restaurantID] = true
+        tableBody.appendChild(createElement("tr", {id: restaurantID}, [restaurantName, customerCount]))
     })
 }
 
-function createCell(value, type) {
-    const cell = document.createElement("td")
-    cell.className = type
-    cell.appendChild(document.createTextNode(value))
-    return cell;
-}
-
-function updateRow(restaurantID, value) {
-    const cell = document.getElementById(restaurantID).getElementsByClassName("current-customer")
-    if (cell.length === 0) {
-        alert("error")
-    }
-    cell[0].textContent = value
+function updateRestaurant(restaurantID, value) {
+    document.getElementById(restaurantID).getElementsByClassName(CLASS_NAME.CUSTOMER_COUNT)[0].textContent = value;
 }
 
 function get(uri, query) {
