@@ -1,8 +1,8 @@
 package restaurant
 
 type Restaurant struct {
-	Name string
-	MaxCustomer int
+	Name        string `json:"name"`
+	MaxCustomer int    `json:"maxCustomer"`
 }
 
 var mockRestaurants = map[string]*Restaurant{

@@ -2,11 +2,12 @@ package endpoint
 
 import (
 	"fmt"
-	"github.com/gorilla/websocket"
-	"github.com/joho/godotenv"
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/gorilla/websocket"
+	"github.com/joho/godotenv"
 )
 
 // upgrader for websocket connection
@@ -21,7 +22,7 @@ func init() {
 	}
 
 	upgrader = websocket.Upgrader{
-		ReadBufferSize: 1024,
+		ReadBufferSize:  1024,
 		WriteBufferSize: 1024,
 	}
 
@@ -41,6 +42,9 @@ func setHandler() {
 	// dashboard frontend
 	http.Handle("/", fileServer)
 
+	// register
+	http.HandleFunc("/register", register)
+
 	// checkin - checkout endpoint
 	http.HandleFunc("/checkin", checkIn)
 	http.HandleFunc("/checkout", checkOut)
@@ -50,4 +54,5 @@ func setHandler() {
 
 	// subscribe value change
 	http.HandleFunc("/subscribe", subscribe)
+
 }

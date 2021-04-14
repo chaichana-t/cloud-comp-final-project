@@ -8,6 +8,10 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+func Register(restaurant Restaurant) {
+	mockRestaurants[restaurant.Name] = &restaurant
+}
+
 func CheckIn(restaurantID string) {
 	numberOfCustomer, err := strconv.Atoi(syncService.Get(restaurantID))
 	if err != nil {

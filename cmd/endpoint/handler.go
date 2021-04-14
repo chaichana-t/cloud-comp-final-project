@@ -18,6 +18,19 @@ func subscribe(w http.ResponseWriter, r *http.Request) {
 	restaurant.Subscribe(conn)
 }
 
+func register(w http.ResponseWriter, r *http.Request) {
+	decoder := json.NewDecoder(r.Body)
+	var newRestaurant restaurant.Restaurant
+	decoder.DisallowUnknownFields()
+	err := decoder.Decode(&newRestaurant)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	restaurant.Register(newRestaurant)
+}
+
 func checkIn(w http.ResponseWriter, r *http.Request) {
 	restaurant.CheckIn(parseRestaurantID(r))
 }
