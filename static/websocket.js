@@ -31,6 +31,7 @@ function createElement(tag, options, children) {
     const e = document.createElement(tag)
     if (options.id !== undefined) e.id = options.id;
     if (options.className !== undefined) e.className = options.className;
+    if (options.align !== undefined) e.align = options.align;
 
     for (const child of children) e.appendChild(child);
 
@@ -41,10 +42,11 @@ function createNewRestaurant(restaurantID, value) {
     get("info", {rid: restaurantID}).then(info => {
         const restaurantName = createElement("td", {
             className: CLASS_NAME.RESTAURANT_ID
-        }, [document.createTextNode(info.Name)]);
+        }, [document.createTextNode(info.name)]);
         const customerCount = createElement("td", {
-            className: CLASS_NAME.CUSTOMER_COUNT
-        }, [document.createTextNode(value + "/" + info.MaxCustomer)]);
+            className: CLASS_NAME.CUSTOMER_COUNT,
+            align: "right",
+        }, [document.createTextNode(value + " / " + info.maxCustomer)]);
 
         const tableBody = document.getElementById("table-body")
         tableBody.appendChild(createElement("tr", {id: restaurantID}, [restaurantName, customerCount]))
@@ -67,7 +69,6 @@ function get(uri, query) {
         xmlHttp.onreadystatechange = () => {
             if (xmlHttp.readyState === 4) {
                 if (xmlHttp.status === 200) {
-                    console.log(xmlHttp.responseText)
                     resolve(JSON.parse(xmlHttp.responseText))
                 } else {
                     reject(xmlHttp.status)

@@ -4,13 +4,18 @@
     <meta charset="utf-8">
     <title>Dashboard</title>
     <script src="websocket.js"></script>
+    <style>
+        #main {
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
-    <table id="main" border="1">
+    <table id="main">
         <thead>
             <tr>
-                <td>Restaurant ID</td>
-                <td>Current Customer Count</td>
+                <td><b>Restaurant</b></td>
+                <td align="right"><b>Customer</b></td>
             </tr>
         </thead>
         <tbody id="table-body">
