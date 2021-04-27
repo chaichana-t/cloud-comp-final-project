@@ -14,7 +14,6 @@ socket.addEventListener("message", (event) => {
 
     if (restaurants[message.restaurantID] === undefined) {
         createNewRestaurant(message.restaurantID, message.value)
-        restaurants[message.restaurantID] = true
     } else {
         updateRestaurant(message.restaurantID, message.value)
     }
@@ -40,6 +39,7 @@ function createElement(tag, options, children) {
 
 function createNewRestaurant(restaurantID, value) {
     get("info", {rid: restaurantID}).then(info => {
+        restaurants[restaurantID] = info.maxCustomer
         const restaurantName = createElement("td", {
             className: CLASS_NAME.RESTAURANT_ID
         }, [document.createTextNode(info.name)]);
@@ -54,7 +54,7 @@ function createNewRestaurant(restaurantID, value) {
 }
 
 function updateRestaurant(restaurantID, value) {
-    document.getElementById(restaurantID).getElementsByClassName(CLASS_NAME.CUSTOMER_COUNT)[0].textContent = value;
+    document.getElementById(restaurantID).getElementsByClassName(CLASS_NAME.CUSTOMER_COUNT)[0].textContent = value + " / " + restaurants[restaurantID];
 }
 
 function get(uri, query) {

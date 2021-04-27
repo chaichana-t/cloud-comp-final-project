@@ -32,11 +32,21 @@ func register(w http.ResponseWriter, r *http.Request) {
 }
 
 func checkIn(w http.ResponseWriter, r *http.Request) {
-	restaurant.CheckIn(parseRestaurantID(r))
+	result := restaurant.CheckIn(parseRestaurantID(r))
+	if result {
+		http.Redirect(w, r, "/checkin.html", 302)
+	} else {
+		http.Redirect(w, r, "/error.html", 302)
+	}
 }
 
 func checkOut(w http.ResponseWriter, r *http.Request) {
-	restaurant.CheckOut(parseRestaurantID(r))
+	result := restaurant.CheckOut(parseRestaurantID(r))
+	if result {
+		http.Redirect(w, r, "/checkout.html", 302)
+	} else {
+		http.Redirect(w, r, "/checkout.html", 302)
+	}
 }
 
 func getRestaurantInfo(w http.ResponseWriter, r *http.Request) {

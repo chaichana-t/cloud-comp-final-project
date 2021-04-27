@@ -12,36 +12,38 @@ func Register(restaurant Restaurant) {
 	mockRestaurants[restaurant.Name] = &restaurant
 }
 
-func CheckIn(restaurantID string) {
+func CheckIn(restaurantID string) bool {
 	numberOfCustomer, err := strconv.Atoi(syncService.Get(restaurantID))
 	if err != nil {
 		fmt.Println(err.Error())
-		return
+		return false
 	}
 
 	if numberOfCustomer >= *&GetInfo(restaurantID).MaxCustomer {
 		fmt.Println("Full capacity")
-		return
+		return false
 	}
 
 	value := syncService.Increase(restaurantID)
 	syncService.Publish(redisPayloadChannel, constructPayload(restaurantID, value))
+	return true
 }
 
-func CheckOut(restaurantID string) {
+func CheckOut(restaurantID string) bool {
 	numberOfCustomer, err := strconv.Atoi(syncService.Get(restaurantID))
 	if err != nil {
 		fmt.Println(err.Error())
-		return
+		return false
 	}
 
 	if numberOfCustomer <= 0 {
 		fmt.Println("Conflict")
-		return
+		return false
 	}
 
 	value := syncService.Decrease(restaurantID)
 	syncService.Publish(redisPayloadChannel, constructPayload(restaurantID, value))
+	return true
 }
 
 func Subscribe(connection *websocket.Conn) {
