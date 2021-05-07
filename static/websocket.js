@@ -13,6 +13,7 @@ socket.addEventListener("message", (event) => {
     const message = parseMessage(event.data)
 
     if (restaurants[message.restaurantID] === undefined) {
+        restaurants[message.restaurantID] = 0;
         createNewRestaurant(message.restaurantID, message.value)
     } else {
         updateRestaurant(message.restaurantID, message.value)

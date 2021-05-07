@@ -5,12 +5,22 @@ import (
 	"strconv"
 )
 
-func Increase(key string) string {
-	return strconv.Itoa(int(client.Incr(key).Val()))
+func Increase(key string, max int) (string, bool) {
+	result := int(client.Incr(key).Val())
+	if result > max {
+		client.Decr(key)
+		return strconv.Itoa(result-1), false
+	}
+	return strconv.Itoa(result), true
 }
 
 func Decrease(key string) string {
-	return strconv.Itoa(int(client.Decr(key).Val()))
+	result := int(client.Decr(key).Val())
+	if result < 0 {
+		client.Incr(key)
+		return strconv.Itoa(result+1)
+	}
+	return strconv.Itoa(result)
 }
 
 func Publish(pubsubChannel string, message string) {

@@ -2,9 +2,6 @@ package restaurant
 
 import (
 	syncService "cloud-final-project/cmd/sync-service"
-	"fmt"
-	"strconv"
-
 	"github.com/gorilla/websocket"
 )
 
@@ -13,37 +10,14 @@ func Register(restaurant Restaurant) {
 }
 
 func CheckIn(restaurantID string) bool {
-	numberOfCustomer, err := strconv.Atoi(syncService.Get(restaurantID))
-	if err != nil {
-		fmt.Println(err.Error())
-		return false
-	}
-
-	if numberOfCustomer >= *&GetInfo(restaurantID).MaxCustomer {
-		fmt.Println("Full capacity")
-		return false
-	}
-
-	value := syncService.Increase(restaurantID)
+	value, success := syncService.Increase(restaurantID, GetInfo(restaurantID).MaxCustomer)
 	syncService.Publish(redisPayloadChannel, constructPayload(restaurantID, value))
-	return true
+	return success
 }
 
-func CheckOut(restaurantID string) bool {
-	numberOfCustomer, err := strconv.Atoi(syncService.Get(restaurantID))
-	if err != nil {
-		fmt.Println(err.Error())
-		return false
-	}
-
-	if numberOfCustomer <= 0 {
-		fmt.Println("Conflict")
-		return false
-	}
-
+func CheckOut(restaurantID string) {
 	value := syncService.Decrease(restaurantID)
 	syncService.Publish(redisPayloadChannel, constructPayload(restaurantID, value))
-	return true
 }
 
 func Subscribe(connection *websocket.Conn) {
